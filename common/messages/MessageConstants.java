@@ -147,4 +147,9 @@ public interface MessageConstants
 	 *    The new multicast port to use (2 bytes);
 	 */
 	public static final byte TYPE_MULTICAST_CHANGE = (byte)0x1e;
+    
+    /**
+     * The character set we'll be using for encoding and decoding our strings
+     */
+    public static final String STRING_CHARSET = "UTF-8";
 }
