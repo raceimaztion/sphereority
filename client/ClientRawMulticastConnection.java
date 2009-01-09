@@ -249,7 +249,7 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
      */
     public void sendMessage(Message message) throws Exception
     {
-        byte[] byteMessage = message.getByteMessage();
+        byte[] byteMessage = message.getMessageContents();
         DatagramPacket packet = new DatagramPacket(byteMessage, byteMessage.length, myMCastGroup, myMCastPort);
         mSocket.send(packet);
     }

@@ -124,7 +124,7 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
      */
     protected void SendMessage(UDPListener listener, Message message, 
                                 InetAddress address, int port) throws Exception{
-        byte[] msg = message.getByteMessage();
+        byte[] msg = message.getMessageContents();
         DatagramPacket p = new DatagramPacket(msg,0,msg.length,address,port);
         listener.SendData(p);
     }

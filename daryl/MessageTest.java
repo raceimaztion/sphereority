@@ -7,7 +7,7 @@ public class MessageTest
     public static void main(String[] args)
     {
         LoginRequestMessage msg = new LoginRequestMessage("User", "None");
-        byte[] b_msg = msg.getByteArray();
+        byte[] b_msg = msg.getMessageBytes();
         
         System.out.printf("Login request message is of length %d.\n", b_msg.length);
         System.out.printf("Username: '%s', Password: '%s'\n", msg.getUserName(), msg.getPassword());

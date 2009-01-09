@@ -309,7 +309,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
      * Sends a Sphereority message via all the connectors.
      */
     public void sendMessage(Message message) throws Exception {
-        byte[] msgToSend = message.getByteMessage();
+        byte[] msgToSend = message.getMessageContents();
         for(UDPConnector connector : getConnectors()) {
             connector.SendData(msgToSend, 0, msgToSend.length);
         }
@@ -318,7 +318,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
      * Sends a Sphereority message via all the connectors.
      */
     public void sendMessage(Message message, int connector) throws Exception {
-        byte[] msgToSend = message.getByteMessage();
+        byte[] msgToSend = message.getMessageContents();
         getConnectors().get(connector).SendData(msgToSend, 0, msgToSend.length);
     }
     
