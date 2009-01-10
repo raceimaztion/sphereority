@@ -1,5 +1,6 @@
 package common.messages;
 
+import java.io.ByteArrayInputStream;
 import java.security.InvalidParameterException;
 
 public class LoginRequestMessage extends Message
@@ -25,17 +26,15 @@ public class LoginRequestMessage extends Message
     
     public LoginRequestMessage(byte[] message) throws Exception
     {
-        super(TYPE_LOGIN_REQUEST);
+        super(message);
         
         if (message[1] != (byte)messageType)
             throw new InvalidParameterException(String.format("The byte array passed to the LoginRequestMessage class is NOT a login request message. Message code is 0x%02x.", message[1]));
         
         // Ignore the first two bytes, they're the magic number and the message type
-        int first, second;
-        for (first=2; first < message.length && message[first] != 0; first++);
-        for (second=first+1; second < message.length && message[second] != 0; second++);
-        userName = Message.convertByteArrayToString(message, 2, first-2);
-        password = Message.convertByteArrayToString(message, first+1, second-first-1);
+        ByteArrayInputStream in = new ByteArrayInputStream(message, 2, message.length-2);
+        userName = readStringFromByteArrayInputStream(in);
+        password = readStringFromByteArrayInputStream(in);
     }
     
     public String getUserName()

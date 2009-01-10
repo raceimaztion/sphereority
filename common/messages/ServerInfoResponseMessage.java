@@ -37,7 +37,7 @@ public class ServerInfoResponseMessage extends Message
     
     public ServerInfoResponseMessage(byte[] message)
     {
-        super(TYPE_SERVER_INFO_RESPONSE);
+        super(message);
       
         if (message[1] != TYPE_SERVER_INFO_RESPONSE)
             throw new InvalidParameterException(String.format("The byte array passed to the ServerInfoResponse class is NOT a server info response message. Message code is 0x%02x.", message[1]));
@@ -50,9 +50,15 @@ public class ServerInfoResponseMessage extends Message
         // Player names
         playerNames = new String[numPlayers];
         for (int i=0; i < numPlayers; i++)
-        {
-            // TODO: figure out how to read a string out of a "BAIS"
-        }
+            playerNames[i] = readStringFromByteArrayInputStream(in);
+        // Player teams
+        playerTeams = new byte[numPlayers];
+        for (int i=0; i < numPlayers; i++)
+            playerTeams[i] = (byte)in.read();
+        // Map name
+        mapName = readStringFromByteArrayInputStream(in);
+        // Map
+        map = readStringFromByteArrayInputStream(in);
     }
     
     protected byte[] getMessageContents()

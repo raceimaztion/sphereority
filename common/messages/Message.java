@@ -1,6 +1,9 @@
 package common.messages;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+
 
 public abstract class Message implements MessageConstants
 {
@@ -16,6 +19,16 @@ public abstract class Message implements MessageConstants
 		this.messageType = messageType;
         messageBytes = null;
 	}
+    
+    /**
+     * Create a message from a preexisting byte array
+     * @param message
+     */
+    protected Message(byte[] message)
+    {
+        messageType = message[1];
+        messageBytes = message;
+    }
 	
     /**
      * Get this message's type (one of MessageConstants.TYPE_*)
@@ -45,18 +58,16 @@ public abstract class Message implements MessageConstants
         byte[] contents = getMessageContents();
         
         if (contents == null)
-            return new byte[] { GAME_MAGIC_NUMBER, (byte)messageType }; 
+            return new byte[] { GAME_MAGIC_NUMBER, (byte)messageType };
         
-        byte[] result = new byte[contents.length + 2];
+        messageBytes = new byte[contents.length + 2];
         
-        result[0] = GAME_MAGIC_NUMBER;
-        result[1] = (byte)messageType;
+        messageBytes[0] = GAME_MAGIC_NUMBER;
+        messageBytes[1] = (byte)messageType;
         for (int i=0; i < contents.length; i++)
-            result[i+2] = contents[i];
+            messageBytes[i+2] = contents[i];
         
-        messageBytes = result;
-        
-        return result;
+        return messageBytes;
     }
     
     /**
@@ -75,6 +86,18 @@ public abstract class Message implements MessageConstants
             System.err.println("Fatal error: The character encoding 'UTF-8' is not supported on this platform!");
             return s.getBytes();
         }
+    }
+    
+    /**
+     * Writes a zero-terminated string to a ByteArrayOutputStream
+     * @param s The string to write
+     * @param out The stream to write to
+     */
+    public static void addStringToByteOutputStream(String s, ByteArrayOutputStream out)
+    {
+        byte[] temp = convertStringToByteArray(s);
+        out.write(temp, 0, temp.length);
+        out.write(0);
     }
     
     /**
@@ -115,12 +138,24 @@ public abstract class Message implements MessageConstants
         }
     }
     
-    public static int findNextZero(byte[] array, int offset)
+    /**
+     * Reads a zero-terminated string from the stream
+     * @param in
+     * @return
+     */
+    public static String readStringFromByteArrayInputStream(ByteArrayInputStream in)
     {
-        for (int i=offset+1; i < array.length; i++)
-            if (array[i] == 0)
-                return i;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int b;
         
-        return -1;
+        b = in.read();
+        while (b != -1 && b != 0)
+        {
+            out.write(b);
+            
+            b = in.read();
+        }
+        
+        return convertByteArrayToString(out.toByteArray());
     }
 }
