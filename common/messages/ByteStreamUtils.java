@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
  * This class consists of static methods to assist in pushing data into and out of a byte array or a ByteArray(Input/Output)Stream
  * @author dvanhumb
  */
-public class ByteArrayUtils implements MessageConstants
+public class ByteStreamUtils implements MessageConstants
 {
     /**
      * Convert a string to an array of bytes
@@ -55,7 +55,7 @@ public class ByteArrayUtils implements MessageConstants
      * @param out The ByteArrayOuputStream to use
      * @param s The string to write
      */
-	public static void byteStreamWrite(ByteArrayOutputStream out, String s)
+	public static void write(ByteArrayOutputStream out, String s)
 	{
 		byte[] temp = convertStringToByteArray(s);
 		out.write(temp, 0, temp.length);
@@ -67,7 +67,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param out The ByteArrayOutputStream to use
 	 * @param b The byte to write
 	 */
-	public static void byteStreamWrite(ByteArrayOutputStream out, byte b)
+	public static void write(ByteArrayOutputStream out, byte b)
 	{
 		out.write(b);
 	}
@@ -77,7 +77,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param out The ByteArrayOutputStream to use
 	 * @param c The pair of bytes to write
 	 */
-	public static void byteStreamWrite(ByteArrayOutputStream out, char c)
+	public static void write(ByteArrayOutputStream out, char c)
 	{
 		// Upper byte first
 		out.write(0xff & (c >> 8));
@@ -90,7 +90,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param out The ByteArrayOutputStream to use
 	 * @param i The "word" of bytes to write
 	 */
-	public static void byteStreamWrite(ByteArrayOutputStream out, int i)
+	public static void write(ByteArrayOutputStream out, int i)
 	{
 		// Most significant byte first
 		for (int n=3; n >= 0; n--)
@@ -102,7 +102,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param out The ByteArrayOutputStream to use
 	 * @param l The "double word" of bytes to write
 	 */
-	public static void byteStreamWrite(ByteArrayOutputStream out, long l)
+	public static void write(ByteArrayOutputStream out, long l)
 	{
 		// Most significant byte first
 		for (int i=7; i >= 0; i--)
@@ -114,9 +114,9 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param out The ByteArrayOutputStream to use
 	 * @param f The float value to write
 	 */
-	public static void byteStreamWrite(ByteArrayOutputStream out, float f)
+	public static void write(ByteArrayOutputStream out, float f)
 	{
-		byteStreamWrite(out, Float.floatToRawIntBits(f));
+		write(out, Float.floatToRawIntBits(f));
 	}
 	
 	/* ******************************************************************** *
@@ -128,7 +128,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param in The ByteArrayInputStream to use
 	 * @return A string from the stream
 	 */
-	public static String byteStreamReadString(ByteArrayInputStream in)
+	public static String readString(ByteArrayInputStream in)
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
@@ -147,7 +147,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param in The ByteArrayInputStream to use
 	 * @return The single byte read in
 	 */
-	public static byte byteStreamReadByte(ByteArrayInputStream in)
+	public static byte readByte(ByteArrayInputStream in)
 	{
 		return (byte)in.read();
 	}
@@ -157,7 +157,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param in The ByteArrayInputStream to use
 	 * @return The pair of bytes read in
 	 */
-	public static char byteStreamReadChar(ByteArrayInputStream in)
+	public static char readChar(ByteArrayInputStream in)
 	{
 		return (char)((0xff & in.read())<<8 | 0xff & in.read());
 	}
@@ -167,7 +167,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param in The ByteArrayInputStream to use
 	 * @return The "word" of bytes read in
 	 */
-	public static int byteStreamReadInt(ByteArrayInputStream in)
+	public static int readInt(ByteArrayInputStream in)
 	{
 		int result = 0;
 		for (int i=3; i >= 0; i--)
@@ -180,7 +180,7 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param in The ByteArrayInputStream to use
 	 * @return The "double word" of bytes read in
 	 */
-	public static long byteStreamReadLong(ByteArrayInputStream in)
+	public static long readLong(ByteArrayInputStream in)
 	{
 		long result = 0;
 		for (int i=7; i >= 0; i--)
@@ -193,8 +193,8 @@ public class ByteArrayUtils implements MessageConstants
 	 * @param in The ByteArrayInputStream to use
 	 * @return The float value read in
 	 */
-	public static float byteStreamReadFloat(ByteArrayInputStream in)
+	public static float readFloat(ByteArrayInputStream in)
 	{
-		return Float.intBitsToFloat(byteStreamReadInt(in));
+		return Float.intBitsToFloat(readInt(in));
 	}
 }

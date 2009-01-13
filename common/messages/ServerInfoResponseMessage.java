@@ -50,22 +50,19 @@ public class ServerInfoResponseMessage extends Message
         // Player names
         playerNames = new String[numPlayers];
         for (int i=0; i < numPlayers; i++)
-            playerNames[i] = readStringFromByteArrayInputStream(in);
+            playerNames[i] = ByteStreamUtils.readString(in);
         // Player teams
         playerTeams = new byte[numPlayers];
         for (int i=0; i < numPlayers; i++)
             playerTeams[i] = (byte)in.read();
         // Map name
-        mapName = readStringFromByteArrayInputStream(in);
+        mapName = ByteStreamUtils.readString(in);
         // Map
-        map = readStringFromByteArrayInputStream(in);
+        map = ByteStreamUtils.readString(in);
     }
     
     protected byte[] getMessageContents()
     {
-        // To avoid the write(byte[]) method that throws IOExceptions
-        byte[] temp;
-        
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         // Game type
         out.write(type);
@@ -74,20 +71,14 @@ public class ServerInfoResponseMessage extends Message
         out.write(0xFF & numPlayers);
         // Player names
         for (int i=0; i < numPlayers; i++)
-        {
-            temp = Message.convertStringToByteArray(playerNames[i]);
-            out.write(temp, 0, temp.length);
-            out.write(0);
-        }
+        	ByteStreamUtils.write(out, playerNames[i]);
         // Player teams
         for (int i=0; i < numPlayers; i++)
             out.write(playerTeams[i]);
         // Map name
-        temp = Message.convertStringToByteArray(mapName);
-        out.write(temp, 0, temp.length);
+    	ByteStreamUtils.write(out, mapName);
         // Map
-        temp = Message.convertStringToByteArray(map);
-        out.write(temp, 0, temp.length);
+    	ByteStreamUtils.write(out, map);
         
         return out.toByteArray();
     }

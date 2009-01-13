@@ -1,6 +1,7 @@
 package common.messages;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.security.InvalidParameterException;
 
 /**
@@ -29,18 +30,22 @@ public class LoginRequestMessage extends Message
             this.password = password;
     }
     
-    
+    /**
+     * Decode a message into a login request message
+     * @param message The byte array that encoded the message
+     * @throws Exception If the byte array is not actually a login request message, then an exception is thrown
+     */
     public LoginRequestMessage(byte[] message) throws Exception
     {
         super(message);
         
-        if (message[1] != (byte)messageType)
+        if (message[1] != TYPE_LOGIN_REQUEST)
             throw new InvalidParameterException(String.format("The byte array passed to the LoginRequestMessage class is NOT a login request message. Message code is 0x%02x.", message[1]));
         
         // Ignore the first two bytes, they're the magic number and the message type
         ByteArrayInputStream in = new ByteArrayInputStream(message, 2, message.length-2);
-        userName = readStringFromByteArrayInputStream(in);
-        password = readStringFromByteArrayInputStream(in);
+        userName = ByteStreamUtils.readString(in);
+        password = ByteStreamUtils.readString(in);
     }
     
     public String getUserName()
@@ -55,18 +60,11 @@ public class LoginRequestMessage extends Message
     
     protected byte[] getMessageContents()
     {
-        byte[] uname = Message.convertStringToByteArray(userName),
-               pword = Message.convertStringToByteArray(password);
-        byte[] result = new byte[uname.length + pword.length + 2];
-        
-        for (int i=0; i < uname.length; i++)
-            result[i] = uname[i];
-        result[uname.length] = 0;
-        
-        for (int i=0,j=uname.length+1; i < pword.length; i++,j++)
-            result[j] = pword[i];
-        result[result.length-1] = 0;
-        
-        return result;
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	
+    	ByteStreamUtils.write(out, userName);
+    	ByteStreamUtils.write(out, password);
+    	
+        return out.toByteArray();
     }
 }

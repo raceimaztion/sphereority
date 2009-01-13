@@ -1,6 +1,7 @@
 package common.messages;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.security.InvalidParameterException;
 
 import common.Position;
@@ -55,12 +56,55 @@ public class LoginResponseMessage extends Message
 		// Ignore the first two bytes, they're the game magic number and message type
 		ByteArrayInputStream in = new ByteArrayInputStream(message, 2, message.length-2);
 		// Player id
+		playerId = ByteStreamUtils.readChar(in);
+		// Map name
+		mapName = ByteStreamUtils.readString(in);
+		// Map
+		map = ByteStreamUtils.readString(in);
+		// Number of players
+		numPlayers = ByteStreamUtils.readChar(in);
+		// All player names
+		playerNames = new String[numPlayers];
+		for (int i=0; i < numPlayers; i++)
+			playerNames[i] = ByteStreamUtils.readString(in);
+		// All player ids
+		playerIds = new char[numPlayers];
+		for (int i=0; i < numPlayers; i++)
+			playerIds[i] = ByteStreamUtils.readChar(in);
+		// All player teams
+		playerTeams = new byte[numPlayers];
+		for (int i=0; i < numPlayers; i++)
+			playerTeams[i] = ByteStreamUtils.readByte(in);
+		// Initial position
+		initialPosition = new Position(ByteStreamUtils.readFloat(in),
+				ByteStreamUtils.readFloat(in));
 	}
 	
 	protected byte[] getMessageContents()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		// Player id
+		ByteStreamUtils.write(out, playerId);
+		// Map name
+		ByteStreamUtils.write(out, mapName);
+		// Map
+		ByteStreamUtils.write(out, map);
+		// Number of players
+		ByteStreamUtils.write(out, numPlayers);
+		// All player names
+		for (int i=0; i < numPlayers; i++)
+			ByteStreamUtils.write(out, playerNames[i]);
+		// All player ids
+		for (int i=0; i < numPlayers; i++)
+			ByteStreamUtils.write(out, playerIds[i]);
+		// All player teams
+		for (int i=0; i < numPlayers; i++)
+			ByteStreamUtils.write(out, playerTeams[i]);
+		// Initial position
+		ByteStreamUtils.write(out, initialPosition.getX());
+		ByteStreamUtils.write(out, initialPosition.getY());
+		
+		return out.toByteArray();
 	}
 	
 	public float getGameTime()
