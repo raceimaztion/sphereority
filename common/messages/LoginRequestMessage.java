@@ -3,6 +3,12 @@ package common.messages;
 import java.io.ByteArrayInputStream;
 import java.security.InvalidParameterException;
 
+/**
+ * A client will send this to a server to ask that it be included in the game
+ * Contents:
+ *   Player name (1 string)
+ *   Server password (1 string, empty if not included)
+ */
 public class LoginRequestMessage extends Message
 {
     private String userName, password;

@@ -25,7 +25,7 @@ public class ServerInfoRequestMessage extends Message
     
     public byte[] getMessageContents()
     {
-        // We have no addition information
+        // We have no additional information
         return null;
     }
 

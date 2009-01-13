@@ -92,4 +92,33 @@ public class ServerInfoResponseMessage extends Message
         return out.toByteArray();
     }
 
+	public String getMap()
+	{
+		return map;
+	}
+
+	public String getMapName()
+	{
+		return mapName;
+	}
+
+	public char getNumPlayers()
+	{
+		return numPlayers;
+	}
+
+	public String[] getPlayerNames()
+	{
+		return playerNames;
+	}
+
+	public byte[] getPlayerTeams()
+	{
+		return playerTeams;
+	}
+
+	public byte getType()
+	{
+		return type;
+	}
 }
