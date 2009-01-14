@@ -2,6 +2,11 @@ package common.messages;
 
 public abstract class Message implements MessageConstants
 {
+	/**
+	 * The size of all message headers in bytes
+	 */
+	public static final int MESSAGE_HEADER_SIZE = 2;
+	
 	protected int messageType;
     protected byte[] messageBytes;
 	
@@ -21,6 +26,9 @@ public abstract class Message implements MessageConstants
      */
     protected Message(byte[] message)
     {
+    	if (message == null)
+    		throw new NullPointerException("All Message classes MUST be passed a non-null byte array message for decoding!");
+    	
         messageType = message[1];
         messageBytes = message;
     }

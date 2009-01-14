@@ -9,7 +9,7 @@ public class HumanPlayer extends LocalPlayer
         inputDevice = input;
     }
     
-    public HumanPlayer(InputListener input, byte playerID, String name)
+    public HumanPlayer(InputListener input, char playerID, String name)
     {
         super(playerID, name);
         inputDevice = input;

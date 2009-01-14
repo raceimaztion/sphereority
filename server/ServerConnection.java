@@ -3,7 +3,7 @@ package server;
 import common.Constants;
 //import common.Player;
 import common.messages.Message;
-import common.messages.MessageAnalyzer;
+import common.messages.MessageAnalyser;
 import common.messages.PlayerJoinMessage;
 import common.messages.PlayerLeaveMessage;
 //import common.messages.PlayerMotionMessage;
@@ -50,7 +50,7 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
     {
         try
         {
-            Message message = MessageAnalyzer.getMessage(packet.getData());
+            Message message = MessageAnalyser.getMessageFromArray(packet.getData());
             
             // Ignore the message if it is sent by the server
             if(message.isAck())
@@ -66,7 +66,7 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
                     // Processing a new player?
                     if(pj.getPlayerId() == -1) {
                         pj.setPlayerId(engine.processPlayerJoin(pj));
-                        logger.log(Level.INFO,"Added Player " + pj.getName() + " with ID " + pj.getPlayerId());
+                        logger.log(Level.INFO,"Added Player " + pj.getPlayerName() + " with ID " + pj.getPlayerId());
                         
                         // Send a message via the Server
                         SendMessage(listener,
@@ -81,14 +81,14 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
                         if(playerName == null) {
                             // Send a message that this player should be removed
                             SendMessage(listener,
-                                new PlayerLeaveMessage(pj.getPlayerId(),true),
+                                new PlayerLeaveMessage(pj.getPlayerId()),
                                 listener.getIPAddress(),
                                 listener.getPort());
                             logger.log(Level.INFO,"Unknown player. Remove from game");
                         }
                         else {
                             pj.setName(playerName);
-                            logger.log(Level.INFO,"Notified Players About " + pj.getName());
+                            logger.log(Level.INFO,"Notified Players About " + pj.getPlayerName());
                             SendMessage(listener,
                                     pj,
                                     listener.getIPAddress(),
@@ -124,7 +124,7 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
      */
     protected void SendMessage(UDPListener listener, Message message, 
                                 InetAddress address, int port) throws Exception{
-        byte[] msg = message.getMessageContents();
+        byte[] msg = message.getMessageBytes();
         DatagramPacket p = new DatagramPacket(msg,0,msg.length,address,port);
         listener.SendData(p);
     }

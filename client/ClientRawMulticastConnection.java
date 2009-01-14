@@ -4,7 +4,6 @@ import common.*;
 import common.messages.*;
 
 import java.awt.event.*;
-//import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.nio.*;
@@ -181,7 +180,7 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
             //buffer.rewind();
 
             // Get the message from the buffer
-            Message message = MessageAnalyzer.getMessage(buffer);
+            Message message = MessageAnalyser.getMessageFromArray(buffer.array());
 
             if (message == null)
                 return;
@@ -192,12 +191,12 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
             switch (message.getMessageType())
             {
                 case PlayerMotion:
-                    engine.processPlayerMotion((PlayerMotionMessage) message);
+                    engine.processPlayerMotion((PlayerMotionMessage)message);
                     System.out.printf("PlayerMotion: %d moved to\t(%.2f,%.2f)\n", message.getPlayerId(), ((PlayerMotionMessage) message).getPosition().getX(), ((PlayerMotionMessage) message).getPosition().getY());
                     break;
                 case PlayerJoin:
                     PlayerJoinMessage msg = (PlayerJoinMessage) message;
-                    System.out.println("PlayerJoin: " + msg.getName() + " wants to join");
+                    System.out.println("PlayerJoin: " + msg.getPlayerName() + " wants to join");
                     engine.processPlayerJoin(msg);
                     registerPlayer(msg.getPlayerId(), msg.getAddress());
                     break;
@@ -212,7 +211,7 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
     {
         try
         {
-            Message message = MessageAnalyzer.getMessage(data);
+            Message message = MessageAnalyser.getMessageFromArray(data);
             if (message.getPlayerId() == engine.localPlayer.getPlayerID())
                 return;
 
@@ -225,7 +224,7 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
                 
                 case PlayerJoin:
                     PlayerJoinMessage msg = (PlayerJoinMessage) message;
-                    System.out.println("PlayerJoin: " + msg.getName() + " wants to join");
+                    System.out.println("PlayerJoin: " + msg.getPlayerName() + " wants to join");
                     engine.processPlayerJoin(msg);
                     registerPlayer(msg.getPlayerId(), msg.getAddress());
                     break;
@@ -249,7 +248,7 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
      */
     public void sendMessage(Message message) throws Exception
     {
-        byte[] byteMessage = message.getMessageContents();
+        byte[] byteMessage = message.getMessageBytes();
         DatagramPacket packet = new DatagramPacket(byteMessage, byteMessage.length, myMCastGroup, myMCastPort);
         mSocket.send(packet);
     }

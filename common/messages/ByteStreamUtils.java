@@ -8,8 +8,13 @@ import java.io.UnsupportedEncodingException;
  * This class consists of static methods to assist in pushing data into and out of a byte array or a ByteArray(Input/Output)Stream
  * @author dvanhumb
  */
-public class ByteStreamUtils implements MessageConstants
+public class ByteStreamUtils
 {
+    /**
+     * The character set we'll be using for encoding and decoding our strings
+     */
+    public static final String STRING_CHARSET = "UTF-8";
+    
     /**
      * Convert a string to an array of bytes
      * @param s The string to convert

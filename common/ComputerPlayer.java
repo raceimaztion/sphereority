@@ -21,7 +21,7 @@ public class ComputerPlayer extends LocalPlayer {
 	protected Rectangle2D bounds = null;
 	protected Actor aimingTarget;
 	
-	public ComputerPlayer(byte playerID, String name,GameEngine engine)
+	public ComputerPlayer(char playerID, String name,GameEngine engine)
 	{
 		super(playerID, name);
 		width = height = PLAYER_SIZE;
@@ -41,7 +41,7 @@ public class ComputerPlayer extends LocalPlayer {
 		timeSinceLastShot = 0;
 		GameEngine.gameEngine.playFire(1.0f);
 		
-		Projectile p = new Projectile(new Position(position), new Position(aim), curTime, curTime, (byte)playerID, team);
+		Projectile p = new Projectile(new Position(position), new Position(aim), curTime, curTime, playerID, team);
 		GameEngine.gameEngine.addActor(p);
 	}
 	

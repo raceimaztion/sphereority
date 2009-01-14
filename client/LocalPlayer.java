@@ -33,7 +33,7 @@ public class LocalPlayer extends Player {
 		System.out.printf("New player with ID %d\n", playerID);
 	}
 	
-	public LocalPlayer(byte playerID, String name)
+	public LocalPlayer(char playerID, String name)
 	{
 		super(playerID, name);
 		width = height = PLAYER_SIZE;

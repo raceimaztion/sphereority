@@ -284,4 +284,9 @@ public interface Constants
 	public static String SERVER_LOG_FILE_NAME = "server." + System.currentTimeMillis() + ".log";
 	public static String SERVER_LOG_PATH = LOG_FOLDER + SERVER_LOG_FILE_NAME;
 	public static String SERVER_LOGGER_NAME = "Sphereority Server";
+	
+	/**
+	 * The maximum number of players
+	 */
+	public static final char MAX_PLAYERS = 256;
 }

@@ -14,10 +14,10 @@ public class Projectile extends Actor {
 	protected Position startPos;
 	protected Position direction;
 	protected int damage;
-	protected byte owner;
+	protected char owner;
 	protected boolean isDelivered;
     
-	public Projectile(Position startPos, Position direction, float startTime, float curTime, byte owner, int team)
+	public Projectile(Position startPos, Position direction, float startTime, float curTime, char owner, int team)
 	{
 		this.startPos = new Position(startPos);	// Duplicate this one so we're not following somebody else
 		this.direction = direction;
@@ -95,7 +95,7 @@ public class Projectile extends Actor {
 		g.setStroke(oldStroke);
 	}
 
-	public byte getOwner()
+	public char getOwner()
 	{
 		return owner;
 	}

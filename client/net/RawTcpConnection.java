@@ -40,7 +40,7 @@ public class RawTcpConnection implements NetConnection, Constants, Runnable
 
 	public void sendMessage(Message m) throws IOException
 	{
-		out.write(m.getMessageContents());
+		out.write(m.getMessageBytes());
 	}
 	
 	public void start()

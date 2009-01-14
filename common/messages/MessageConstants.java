@@ -44,6 +44,7 @@ public interface MessageConstants
 	 *   know about the game currently in progress. If a login fails, the connection is closed.
 	 * Contents:
 	 *    The new player's id (2 bytes)
+	 *    The new player's team (1 byte)
 	 *    Map name (1 string)
 	 *    Map (1 string)
 	 *    Number of players (2 bytes)
@@ -116,12 +117,15 @@ public interface MessageConstants
 	 *    Time of motion (1 float)
 	 *    Position (2 floats)
 	 *    Velocity (2 floats)
+	 *    Aim (2 floats)
 	 */
 	public static final byte TYPE_PLAYER_MOTION = (byte)0x1a;
 	
 	/**
 	 * A request that anyone hearing this message send a response.
-	 * Contains no additional information
+	 * Contains:
+	 *    Sender's player id (2 bytes) or 0xffff for the server
+	 *    Sender's current game time (1 float)
 	 */
 	public static final byte TYPE_PING_REQUEST = (byte)0x1b;
 	
@@ -129,6 +133,7 @@ public interface MessageConstants
 	 * A response to a ping request
 	 * Contains:
 	 *    Sender's player id (2 bytes) or 0xffff for the server
+	 *    Sender's current game time (1 float)
 	 */
 	public static final byte TYPE_PING_RESPONSE = (byte)0x1c;
 	
@@ -147,9 +152,4 @@ public interface MessageConstants
 	 *    The new multicast port to use (2 bytes);
 	 */
 	public static final byte TYPE_MULTICAST_CHANGE = (byte)0x1e;
-    
-    /**
-     * The character set we'll be using for encoding and decoding our strings
-     */
-    public static final String STRING_CHARSET = "UTF-8";
 }

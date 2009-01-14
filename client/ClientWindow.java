@@ -44,7 +44,7 @@ public class ClientWindow extends Thread implements Constants {
 			// This grabs a random map on startup
 			map = new Map(MAP_LIST[RANDOM.nextInt(MAP_LIST.length)]);
             Random random = new Random();
-            byte playerId = (byte) random.nextInt(6);
+            char playerId = (char) random.nextInt(MAX_PLAYERS);
             //System.out.println(playerId);
 			game = new GameEngine(map, playerId, loginWindow.getUserName(), false);
 			

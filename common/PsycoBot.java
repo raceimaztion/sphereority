@@ -6,7 +6,7 @@ import client.GameEngine;
 public class PsycoBot extends ComputerPlayer {
 	public static Logger logger = Logger.getLogger(CLIENT_LOGGER_NAME);
 	
-	public PsycoBot(byte playerID, String name, GameEngine engine)
+	public PsycoBot(char playerID, String name, GameEngine engine)
 	{
 		super(playerID, name, engine);
 	}

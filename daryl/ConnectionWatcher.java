@@ -29,7 +29,7 @@ public class ConnectionWatcher extends Thread implements Constants
 				multicastSocket.receive(packet);
 				System.out.printf("Recieved packet of length %d\n", packet.getLength());
 				
-				Message message = MessageAnalyzer.getMessage(packet.getData());
+				Message message = MessageAnalyser.getMessageFromArray(packet.getData());
 				if (!(message instanceof PlayerMotionMessage))
 					continue;
 				

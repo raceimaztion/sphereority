@@ -42,8 +42,8 @@ public class LoginRequestMessage extends Message
         if (message[1] != TYPE_LOGIN_REQUEST)
             throw new InvalidParameterException(String.format("The byte array passed to the LoginRequestMessage class is NOT a login request message. Message code is 0x%02x.", message[1]));
         
-        // Ignore the first two bytes, they're the magic number and the message type
-        ByteArrayInputStream in = new ByteArrayInputStream(message, 2, message.length-2);
+        // Skip the header
+        ByteArrayInputStream in = new ByteArrayInputStream(message, MESSAGE_HEADER_SIZE, message.length-MESSAGE_HEADER_SIZE);
         userName = ByteStreamUtils.readString(in);
         password = ByteStreamUtils.readString(in);
     }

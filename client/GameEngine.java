@@ -49,7 +49,7 @@ public class GameEngine implements Constants, ActionListener, ActionCallback
     public SoundEffect soundBump, soundDeath, soundFire;
 
     // CONSTRUCTORS
-    public GameEngine(Map m, byte playerID, String name, boolean bot)
+    public GameEngine(Map m, char playerID, String name, boolean bot)
     {
         preSetup(m);
 
@@ -578,8 +578,7 @@ public class GameEngine implements Constants, ActionListener, ActionCallback
 
         // Do not process a player if they have not been added
         if(playerIndex == -1) {
-            SpawnPoint sp = new SpawnPoint(message.getPosition());
-            processPlayerJoin(new PlayerJoinMessage(message.getPlayerId(), RESOLVING_NAME, null, sp));
+            processPlayerJoin(new PlayerJoinMessage(message.getPlayerId(), RESOLVING_NAME, (byte)-1));
         }
         
         if (playerIndex < 0)
@@ -605,9 +604,8 @@ public class GameEngine implements Constants, ActionListener, ActionCallback
 
         // Creating a new player
         if(playerIndex == -1) {
-            player = new RemotePlayer(message.getPlayerId(),message.getName());
+            player = new RemotePlayer(message.getPlayerId(),message.getPlayerName());
             logger.log(Level.FINE,"Player Added: " + player.getPlayerID());
-            gameMap.placePlayer(player,message.getSpawnPoint());
             addActor(player);
         }
         // Updating information about the player
@@ -615,14 +613,14 @@ public class GameEngine implements Constants, ActionListener, ActionCallback
         {
             player = playerList.get(playerIndex);
             logger.log(Level.FINE,"Player Info Updated: " + player.getPlayerID());
-            player.setPlayerName(message.getName());
+            player.setPlayerName(message.getPlayerName());
         }
     }
 
-    public void processProjectile(ProjectileMessage message)
+    public void processProjectile(ProjectileLaunchMessage message)
     {
         // Get the index of the player
-        int playerIndex = getPlayerIndex(message.getPlayerId());
+        int playerIndex = getPlayerIndex(message.getOwnerId());
 
         // Do not process this message if the player has not joined the game
         if (playerIndex == -1)
@@ -632,7 +630,7 @@ public class GameEngine implements Constants, ActionListener, ActionCallback
         
         if (player instanceof RemotePlayer) {
             // Add the projectile to the list
-            addActor(new Projectile(message.getStartPosition(),
+            addActor(new Projectile(message.getOrigin(),
                                     message.getDirection(),
                                     player.getCurrentTime(),
                                     player.getCurrentTime(),

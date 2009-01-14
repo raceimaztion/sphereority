@@ -4,11 +4,11 @@ import common.Player;
 import common.Constants;
 import common.SpawnPoint;
 import common.messages.Message;
-import common.messages.MessageAnalyzer;
+import common.messages.MessageAnalyser;
 import common.messages.PlayerJoinMessage;
 import common.messages.PlayerLeaveMessage;
 import common.messages.PlayerMotionMessage;
-import common.messages.ProjectileMessage;
+import common.messages.ProjectileLaunchMessage;
 //import common.messages.LoginMessage;
 
 import Extasys.Network.UDP.Client.Connectors.UDPConnector;
@@ -119,11 +119,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
         // Note: Do not need to specify address here.
         // Is here just to avoid a nullpointer when writing the message
         sendMessage(
-            new PlayerJoinMessage((byte)-1,
-                                  engine.localPlayer.getPlayerName(),
-                                  serverAddress,
-                                  sp,
-                                  false),
+            new PlayerJoinMessage((char)-1, engine.localPlayer.getPlayerName(), (byte)-1),
                                   SERVER_CONNECTOR);
     
         // Make sure that we only wait at most 10 seconds
@@ -183,7 +179,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
     public void OnDataReceive(UDPConnector connector, DatagramPacket packet) {
         try {
             // Retrieve the message
-            Message message = MessageAnalyzer.getMessage(packet.getData());
+            Message message = MessageAnalyser.getMessageFromArray(packet.getData());
             
             // Ignore messages that are sent to yourself
             if( (message.getPlayerId() == engine.localPlayer.getPlayerID() 
@@ -227,10 +223,10 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
                     // Ignore otherwise
                     break;
                 case Projectile:
-                    ProjectileMessage p = (ProjectileMessage) message;
-                    logger.log(Level.FINE,"Projectile: " + p.getPlayerId()
+                    ProjectileLaunchMessage p = (ProjectileLaunchMessage) message;
+                    logger.log(Level.FINE,"Projectile: " + p.getOwnerId()
                                                          + " "
-                                                         + p.getStartPosition()
+                                                         + p.getOrigin()
                                                          + " "
                                                          + p.getDirection());
                     engine.processProjectile(p);

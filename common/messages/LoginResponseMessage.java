@@ -11,6 +11,7 @@ import common.Position;
  *   know about the game currently in progress. If a login fails, the connection is closed.
  * Contents:
  *    The new player's id (2 bytes)
+ *    The new player's team (1 byte)
  *    Map name (1 string)
  *    Map (1 string)
  *    Number of players (2 bytes)
@@ -24,6 +25,7 @@ import common.Position;
 public class LoginResponseMessage extends Message
 {
 	private char playerId;
+	private byte playerTeam;
 	private String mapName, map;
 	private char numPlayers;
 	private String[] playerNames;
@@ -32,11 +34,12 @@ public class LoginResponseMessage extends Message
 	private Position initialPosition;
 	private float gameTime;
 
-	public LoginResponseMessage(char playerId, String mapName, String map, char numPlayers, String[] playerNames, char[] playerIds, byte[] playerTeams, Position initialPosition, float gameTime)
+	public LoginResponseMessage(char playerId, byte playerTeam, String mapName, String map, char numPlayers, String[] playerNames, char[] playerIds, byte[] playerTeams, Position initialPosition, float gameTime)
 	{
 		super(TYPE_LOGIN_RESPONSE);
 		
 		this.playerId = playerId;
+		this.playerTeam = playerTeam;
 		this.mapName = mapName;
 		this.map = map;
 		this.numPlayers = numPlayers;
@@ -53,10 +56,12 @@ public class LoginResponseMessage extends Message
 		if (message[1] != TYPE_LOGIN_RESPONSE)
             throw new InvalidParameterException(String.format("The byte array passed to the LoginResponseMessage class is NOT a login response message. Message code is 0x%02x.", message[1]));
 		
-		// Ignore the first two bytes, they're the game magic number and message type
-		ByteArrayInputStream in = new ByteArrayInputStream(message, 2, message.length-2);
+		// Skip the header
+		ByteArrayInputStream in = new ByteArrayInputStream(message, MESSAGE_HEADER_SIZE, message.length-MESSAGE_HEADER_SIZE);
 		// Player id
 		playerId = ByteStreamUtils.readChar(in);
+		// Player team
+		playerTeam = ByteStreamUtils.readByte(in);
 		// Map name
 		mapName = ByteStreamUtils.readString(in);
 		// Map
@@ -85,6 +90,8 @@ public class LoginResponseMessage extends Message
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		// Player id
 		ByteStreamUtils.write(out, playerId);
+		// Player team
+		ByteStreamUtils.write(out, playerTeam);
 		// Map name
 		ByteStreamUtils.write(out, mapName);
 		// Map
@@ -126,27 +133,32 @@ public class LoginResponseMessage extends Message
 	{
 		return mapName;
 	}
-
+	
 	public char getNumPlayers()
 	{
 		return numPlayers;
 	}
-
+	
 	public char getPlayerId()
 	{
 		return playerId;
 	}
-
+	
 	public char[] getPlayerIds()
 	{
 		return playerIds;
 	}
-
+	
 	public String[] getPlayerNames()
 	{
 		return playerNames;
 	}
-
+	
+	public byte getPlayerTeam()
+	{
+		return playerTeam;
+	}
+	
 	public byte[] getPlayerTeams()
 	{
 		return playerTeams;

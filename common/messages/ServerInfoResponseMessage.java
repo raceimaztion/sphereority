@@ -42,7 +42,8 @@ public class ServerInfoResponseMessage extends Message
         if (message[1] != TYPE_SERVER_INFO_RESPONSE)
             throw new InvalidParameterException(String.format("The byte array passed to the ServerInfoResponse class is NOT a server info response message. Message code is 0x%02x.", message[1]));
         
-        ByteArrayInputStream in = new ByteArrayInputStream(message);
+        // Skip the header
+        ByteArrayInputStream in = new ByteArrayInputStream(message, MESSAGE_HEADER_SIZE, message.length - MESSAGE_HEADER_SIZE);
         // Game type
         type = (byte)in.read();
         // Number of players

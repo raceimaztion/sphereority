@@ -40,7 +40,7 @@ public class PlayerDeathMessage extends Message
             throw new InvalidParameterException(String.format("The byte array passed to the PlayerDeathMessage class is NOT a player death message. Message code is 0x%02x.", message[1]));
         
         // Ignore the first two bytes, they're the magic number and the message type
-        ByteArrayInputStream in = new ByteArrayInputStream(message, 2, message.length-2);
+        ByteArrayInputStream in = new ByteArrayInputStream(message, MESSAGE_HEADER_SIZE, message.length-MESSAGE_HEADER_SIZE);
         // Dead player's id
         deadPlayerId = ByteStreamUtils.readChar(in);
         // Killing player's id

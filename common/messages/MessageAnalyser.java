@@ -15,12 +15,24 @@ public class MessageAnalyser implements MessageConstants
         switch (getMessageType(message))
         {
             case TYPE_CHAT_MESSAGE:
-                // TODO: Create a ChatMessage class
-                return null;
+            	try
+            	{
+            		return new ChatMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
 
             case TYPE_HEALTH_UPDATE:
-                // TODO: Create a HealthUpdateMessage class
-                return null;
+            	try
+            	{
+            		return new HealthUpdateMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
 
             case TYPE_LOGIN_REQUEST:
                 try
@@ -29,49 +41,108 @@ public class MessageAnalyser implements MessageConstants
                 }
                 catch (Exception er)
                 {
-                    // Error was caught and printed by the above constructor
                     return null;
                 }
 
             case TYPE_LOGIN_RESPONSE:
-                // TODO: Create a LoginResponseMessage class
-                return null;
+            	try
+            	{
+            		return new LoginResponseMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_MULTICAST_CHANGE:
-                // TODO: Create a MulticastChangeMessage class
-                return null;
+            	try
+            	{
+            		return new MulticastChangeMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
                 
             case TYPE_PING_REQUEST:
-                // TODO: Create a PingRequestMessage class
-                return null;
+            	try
+            	{
+            		return new PingRequestMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_PING_RESPONSE:
-                // TODO: Create a PingResponseMessage class
-                return null;
+            	try
+            	{
+            		return new PingResponseMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_PLAYER_DEATH:
-                // TODO: Create a PlayerDeathMessage class
-                return null;
+            	try
+            	{
+            		return new PlayerDeathMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_PLAYER_JOIN:
-                // TODO: Create a PlayerJoinMessage class
-                return null;
+            	try
+            	{
+            		return new PlayerJoinMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_PLAYER_LEAVE:
-                // TODO: Create a PlayerLeaveMessage class
-                return null;
+            	try
+            	{
+            		return new PlayerLeaveMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_PLAYER_MOTION:
-                // TODO: Create a PlayerMotionMessage class
-                return null;
+            	try
+            	{
+            		return new PlayerMotionMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_PLAYER_RESPAWN:
-                // TODO: Create a PlayerRespawnMessage class
-                return null;
+            	try
+            	{
+            		return new PlayerRespawnMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_PROJECTILE_LAUNCH:
-                // TODO: Create a ProjectileLaunchMessage class
-                return null;
+            	try
+            	{
+            		return new ProjectileLaunchMessage(message);
+            	}
+            	catch (Exception er)
+            	{
+            		return null;
+            	}
             
             case TYPE_SERVER_INFO_REQUEST:
                 try

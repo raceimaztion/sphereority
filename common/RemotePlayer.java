@@ -41,7 +41,7 @@ public class RemotePlayer extends Player {
 	 * @param playerID	The id of this player
 	 * @param name		The text name of this player
 	 */
-	public RemotePlayer(byte playerID, String name)
+	public RemotePlayer(char playerID, String name)
 	{
 		super(playerID, name);
 		
@@ -175,7 +175,8 @@ public class RemotePlayer extends Player {
                     renderQueue.add(makeMotionMessage(new Position(positionX,
                                                                    positionY),
                                                       msgVelocity,
-                                                      msgAim));
+                                                      msgAim,
+                                                      currentTime));
                                                      
                 }
                 // Use the first interpolated position/aim
@@ -203,8 +204,9 @@ public class RemotePlayer extends Player {
 		return super.animate(dTime,currentTime);
 	}
     
-    protected PlayerMotionMessage makeMotionMessage(Position pos, Position velocity,Position aim) {
-        return new PlayerMotionMessage(playerID,pos,velocity,aim,(float)System.currentTimeMillis());
+    protected PlayerMotionMessage makeMotionMessage(Position pos, Position velocity,Position aim, float currentTime)
+    {
+        return new PlayerMotionMessage(playerID, currentTime, pos, velocity, aim);
     }
     
     /**
