@@ -2,14 +2,7 @@ package client;
 
 import common.Player;
 import common.Constants;
-import common.SpawnPoint;
-import common.messages.Message;
-import common.messages.MessageAnalyser;
-import common.messages.PlayerJoinMessage;
-import common.messages.PlayerLeaveMessage;
-import common.messages.PlayerMotionMessage;
-import common.messages.ProjectileLaunchMessage;
-//import common.messages.LoginMessage;
+import common.messages.*;
 
 import Extasys.Network.UDP.Client.Connectors.UDPConnector;
 import Extasys.Network.UDP.Client.ExtasysUDPClient;
@@ -27,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * Client connection to the server and other clients.
  */
-public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPClient, Constants, ClientConnection
+public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPClient, Constants, ClientConnection, MessageConstants
 {
     public static Logger logger = Logger.getLogger(CLIENT_LOGGER_NAME);
     public static final int GAME_CONNECTOR = 1;
@@ -111,10 +104,6 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
         logger.log(Level.INFO,"Establishing Server Connection");
         super.Start();
         
-        InetSocketAddress serverAddress
-            = new InetSocketAddress(SERVER_ADDRESS,SERVER_PORT);
-        SpawnPoint sp = new SpawnPoint(engine.localPlayer.getPosition());
-        
         // Request to the server that we log in.
         // Note: Do not need to specify address here.
         // Is here just to avoid a nullpointer when writing the message
@@ -179,16 +168,14 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
     public void OnDataReceive(UDPConnector connector, DatagramPacket packet) {
         try {
             // Retrieve the message
-            Message message = MessageAnalyser.getMessageFromArray(packet.getData());
+            Message message = MessageAnalyser.getMessageFromArray(packet.getData(), new InetSocketAddress(packet.getAddress(), packet.getPort()));
             
             // Ignore messages that are sent to yourself
-            if( (message.getPlayerId() == engine.localPlayer.getPlayerID() 
-                 && !message.isAck()) ||
-               message.getPlayerId() == -1)
-                return;
+            if (message.isMyMessage())
+            	return;
             
             switch(message.getMessageType()) {
-                case PlayerMotion:
+                case TYPE_PLAYER_MOTION:
                     PlayerMotionMessage pm = (PlayerMotionMessage)message;
                     // New player was added?
                     engine.processPlayerMotion(pm);
@@ -200,7 +187,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
                                                            + " "
                                                            + pm.getTime());
                     break;
-                case PlayerJoin:
+                case TYPE_PLAYER_JOIN:
                     PlayerJoinMessage pj = (PlayerJoinMessage) message;
                     logger.log(Level.FINE,"PlayerJoin: " + pj.getPlayerId());
                     String myName = engine.localPlayer.getPlayerName();
@@ -209,12 +196,12 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
                         handleLogin(pj);
                     }
                     // Playing the game and message is not about me?
-                    else if(pj.getPlayerId() != ERROR_ID && !pj.getName().equals(myName)) {
+                    else if(pj.getPlayerId() != ERROR_ID && !pj.getPlayerName().equals(myName)) {
                         engine.processPlayerJoin(pj);
                     }
                     break;
-                case PlayerLeave:
-                    logger.log(Level.FINE,"PlayerLeave: " + message.getPlayerId());
+                case TYPE_PLAYER_LEAVE:
+                    logger.log(Level.FINE,"PlayerLeave: " + ((PlayerLeaveMessage)message).getPlayerId());
                     // Connected?
                     if(isConnected) {
                         // Handle a logout message if it came from the server.
@@ -222,7 +209,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
                     }
                     // Ignore otherwise
                     break;
-                case Projectile:
+                case TYPE_PROJECTILE_LAUNCH:
                     ProjectileLaunchMessage p = (ProjectileLaunchMessage) message;
                     logger.log(Level.FINE,"Projectile: " + p.getOwnerId()
                                                          + " "
@@ -241,24 +228,27 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
     /**
      * Handles login given a PlayerJoin Message.
      */
-    protected void handleLogin(PlayerJoinMessage message) throws Exception {
+    protected void handleLogin(PlayerJoinMessage message) throws Exception
+    {
         String myName = engine.localPlayer.getPlayerName();
         // Message is from the server?
-        if(!message.isAck())
+        if(message.isMyMessage())
             return;
         // Message is intended for me?
-        if(!message.getName().equals(myName))
+        if(!message.getPlayerName().equals(myName))
             return;
         
         // Check for success or failure
-        if(message.getPlayerId() == ERROR_ID) {
+        if(message.getPlayerId() == ERROR_ID)
+        {
             throw new Exception("Unable to login!");
         }
-        else {
+        else
+        {
             engine.localPlayer.setPlayerID(message.getPlayerId());
             AddConnector("GameConnector", 10240, 8000,
-                          message.getAddress().getAddress(),
-                          message.getAddress().getPort(),true);
+                          message.getSource().getAddress(),
+                          message.getSource().getPort(),true);
             isConnected = true;
         }
     }
@@ -268,7 +258,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
      */
     protected void handleLogout(PlayerLeaveMessage message) throws Exception { 
         // Message did not come from server?
-        if(!message.isAck())
+        if(message.isMyMessage())
             return;
         
         // Message is not intended for me remove that player from the game.
@@ -305,7 +295,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
      * Sends a Sphereority message via all the connectors.
      */
     public void sendMessage(Message message) throws Exception {
-        byte[] msgToSend = message.getMessageContents();
+        byte[] msgToSend = message.getMessageBytes();
         for(UDPConnector connector : getConnectors()) {
             connector.SendData(msgToSend, 0, msgToSend.length);
         }
@@ -314,7 +304,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
      * Sends a Sphereority message via all the connectors.
      */
     public void sendMessage(Message message, int connector) throws Exception {
-        byte[] msgToSend = message.getMessageContents();
+        byte[] msgToSend = message.getMessageBytes();
         getConnectors().get(connector).SendData(msgToSend, 0, msgToSend.length);
     }
     
@@ -386,7 +376,7 @@ class SendUpdateMessages extends Thread implements Constants
      */
     protected void sendGameMessages(int checkNames) throws Exception {
         LocalPlayer localPlayer = engine.localPlayer;
-        byte playerId = localPlayer.getPlayerID();
+        char playerId = localPlayer.getPlayerID();
         float currentTime = (float)System.currentTimeMillis();
         
         // Send where the player is now
@@ -400,10 +390,12 @@ class SendUpdateMessages extends Thread implements Constants
                 // we have sent information about it
                 if(!p.isDelivered() && !(p.getOwner() != playerId)) {
                     // Deliver the information about the projectile
-                    fMyClient.sendMessage(new ProjectileMessage(playerId,
-                                            p.getStartPosition(),
-                                            p.getDirection()),
-                                            ClientExtaSysConnection.GAME_CONNECTOR);
+                	fMyClient.sendMessage(new ProjectileLaunchMessage(playerId,
+                			p.getStartPosition(),
+                			p.getDirection(),
+                			p.getStartTime(),
+                			(byte)0),
+                			 ClientExtaSysConnection.GAME_CONNECTOR);
                     p.delivered();
                 }
             }
@@ -415,11 +407,7 @@ class SendUpdateMessages extends Thread implements Constants
                 for(Player player : engine.playerList) {
                     if (player.getPlayerName().equals(RESOLVING_NAME)) {
                         ClientExtaSysConnection.logger.log(Level.INFO,"WHOIS " + player.getPlayerID());
-                        fMyClient.sendMessage(new PlayerJoinMessage(
-                            player.getPlayerID(),
-                            RESOLVING_NAME,
-                            new InetSocketAddress(SERVER_ADDRESS,SERVER_PORT),
-                            new SpawnPoint(player.getPosition())),
+                        fMyClient.sendMessage(new PlayerJoinMessage(playerId, RESOLVING_NAME, (byte)0),
                             ClientExtaSysConnection.SERVER_CONNECTOR);
                     }
                 }

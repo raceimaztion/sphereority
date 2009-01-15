@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -28,9 +29,9 @@ public class MulticastChangeMessage extends Message
 		multicastPort = port;
 	}
 	
-	public MulticastChangeMessage(byte[] message) throws Exception
+	public MulticastChangeMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
 		if (message[1] != TYPE_MULTICAST_CHANGE)
             throw new InvalidParameterException(String.format("The byte array passed to the MulticastChangeMessage class is NOT a multicast change message. Message code is 0x%02x.", message[1]));

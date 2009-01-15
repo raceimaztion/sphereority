@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -35,9 +36,9 @@ public class LoginRequestMessage extends Message
      * @param message The byte array that encoded the message
      * @throws Exception If the byte array is not actually a login request message, then an exception is thrown
      */
-    public LoginRequestMessage(byte[] message) throws Exception
+    public LoginRequestMessage(byte[] message, InetSocketAddress source) throws Exception
     {
-        super(message);
+        super(message, source);
         
         if (message[1] != TYPE_LOGIN_REQUEST)
             throw new InvalidParameterException(String.format("The byte array passed to the LoginRequestMessage class is NOT a login request message. Message code is 0x%02x.", message[1]));

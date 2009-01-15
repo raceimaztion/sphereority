@@ -1,5 +1,7 @@
 package common.messages;
 
+import java.net.InetSocketAddress;
+
 public class MessageAnalyser implements MessageConstants
 {
     /**
@@ -7,7 +9,7 @@ public class MessageAnalyser implements MessageConstants
      * @param message The byte array that represents the message
      * @return The message wrapped in a Message subclass
      */
-    public static Message getMessageFromArray(byte[] message)
+    public static Message getMessageFromArray(byte[] message, InetSocketAddress source)
     {
         if (!isValidMessage(message))
             return null;
@@ -17,7 +19,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_CHAT_MESSAGE:
             	try
             	{
-            		return new ChatMessage(message);
+            		return new ChatMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -27,7 +29,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_HEALTH_UPDATE:
             	try
             	{
-            		return new HealthUpdateMessage(message);
+            		return new HealthUpdateMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -37,7 +39,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_LOGIN_REQUEST:
                 try
                 {
-                    return new LoginRequestMessage(message);
+                    return new LoginRequestMessage(message, source);
                 }
                 catch (Exception er)
                 {
@@ -47,7 +49,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_LOGIN_RESPONSE:
             	try
             	{
-            		return new LoginResponseMessage(message);
+            		return new LoginResponseMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -57,7 +59,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_MULTICAST_CHANGE:
             	try
             	{
-            		return new MulticastChangeMessage(message);
+            		return new MulticastChangeMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -67,7 +69,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PING_REQUEST:
             	try
             	{
-            		return new PingRequestMessage(message);
+            		return new PingRequestMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -77,7 +79,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PING_RESPONSE:
             	try
             	{
-            		return new PingResponseMessage(message);
+            		return new PingResponseMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -87,7 +89,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PLAYER_DEATH:
             	try
             	{
-            		return new PlayerDeathMessage(message);
+            		return new PlayerDeathMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -97,7 +99,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PLAYER_JOIN:
             	try
             	{
-            		return new PlayerJoinMessage(message);
+            		return new PlayerJoinMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -107,7 +109,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PLAYER_LEAVE:
             	try
             	{
-            		return new PlayerLeaveMessage(message);
+            		return new PlayerLeaveMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -117,7 +119,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PLAYER_MOTION:
             	try
             	{
-            		return new PlayerMotionMessage(message);
+            		return new PlayerMotionMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -127,7 +129,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PLAYER_RESPAWN:
             	try
             	{
-            		return new PlayerRespawnMessage(message);
+            		return new PlayerRespawnMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -137,7 +139,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_PROJECTILE_LAUNCH:
             	try
             	{
-            		return new ProjectileLaunchMessage(message);
+            		return new ProjectileLaunchMessage(message, source);
             	}
             	catch (Exception er)
             	{
@@ -147,7 +149,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_SERVER_INFO_REQUEST:
                 try
                 {
-                    return new ServerInfoRequestMessage(message);
+                    return new ServerInfoRequestMessage(message, source);
                 }
                 catch (Exception er)
                 {
@@ -157,7 +159,7 @@ public class MessageAnalyser implements MessageConstants
             case TYPE_SERVER_INFO_RESPONSE:
                 try
                 {
-                    return new ServerInfoResponseMessage(message);
+                    return new ServerInfoResponseMessage(message, source);
                 }
                 catch (Exception er)
                 {

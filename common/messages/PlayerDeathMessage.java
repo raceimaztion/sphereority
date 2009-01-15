@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -32,9 +33,9 @@ public class PlayerDeathMessage extends Message
      * @param message The byte array that encoded the message
      * @throws Exception If the byte array is not actually a player death message, then an exception is thrown
      */
-	public PlayerDeathMessage(byte[] message) throws Exception
+	public PlayerDeathMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
         if (message[1] != TYPE_PLAYER_DEATH)
             throw new InvalidParameterException(String.format("The byte array passed to the PlayerDeathMessage class is NOT a player death message. Message code is 0x%02x.", message[1]));

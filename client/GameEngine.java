@@ -659,7 +659,7 @@ public class GameEngine implements Constants, ActionListener, ActionCallback
         return index;
     }
     
-    public Player getPlayer(byte playerId) {
+    public Player getPlayer(char playerId) {
         synchronized(playerList) {
             for(Player player : playerList) {
                 if(player.getPlayerID() == playerId)

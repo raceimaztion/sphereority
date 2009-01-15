@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -23,6 +24,15 @@ public class ServerInfoResponseMessage extends Message
     private byte[] playerTeams;
     private String mapName, map;
     
+    /**
+     * Encode a new server info response message
+     * @param type Game type
+     * @param numPlayers Total number of player currently logged in
+     * @param playerNames The names of all the other players
+     * @param playerTeams The team each player belongs to
+     * @param mapName The name of the current map
+     * @param map The current map data
+     */
     public ServerInfoResponseMessage(byte type, char numPlayers, String[] playerNames, byte[] playerTeams, String mapName, String map)
     {
         super(TYPE_SERVER_INFO_RESPONSE);
@@ -35,9 +45,15 @@ public class ServerInfoResponseMessage extends Message
         this.map = map;
     }
     
-    public ServerInfoResponseMessage(byte[] message)
+    /**
+     * 
+     * @param message
+     * @param source
+     * @throws Exception
+     */
+    public ServerInfoResponseMessage(byte[] message, InetSocketAddress source) throws Exception
     {
-        super(message);
+        super(message, source);
       
         if (message[1] != TYPE_SERVER_INFO_RESPONSE)
             throw new InvalidParameterException(String.format("The byte array passed to the ServerInfoResponse class is NOT a server info response message. Message code is 0x%02x.", message[1]));

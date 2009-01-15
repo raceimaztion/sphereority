@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 import common.Position;
@@ -44,9 +45,9 @@ public class PlayerMotionMessage extends Message
 	 * @param message
 	 * @throws Exception If the given byte array is not a player motion message, an exception will be thrown
 	 */
-	public PlayerMotionMessage(byte[] message) throws Exception
+	public PlayerMotionMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
 		if (message[1] != TYPE_PLAYER_MOTION)
 			throw new InvalidParameterException(String.format("The byte array passed to the PlayerMotionMessage class is NOT a player motion message. Message code is 0x%02x.", message[1]));

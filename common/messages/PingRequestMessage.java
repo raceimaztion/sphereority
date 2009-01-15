@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -33,9 +34,9 @@ public class PingRequestMessage extends Message
 	 * @param message
 	 * @throws Exception If there is a problem decoding the message, an exception is thrown
 	 */
-	public PingRequestMessage(byte[] message) throws Exception
+	public PingRequestMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
 		if (message[1] != TYPE_PING_REQUEST)
 			throw new InvalidParameterException(String.format("The byte array passed to the PingRequestMessage class is NOT a ping request message. Message code is 0x%02x.", message[1]));

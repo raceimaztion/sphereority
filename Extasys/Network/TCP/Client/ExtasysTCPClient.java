@@ -37,7 +37,7 @@ public class ExtasysTCPClient
 
     private String fName,  fDescription;
     private ArrayList<Object> fConnectors = new ArrayList<Object>();
-    private ArrayBlockingQueue fThreadPoolQueue = new ArrayBlockingQueue(100000);
+    private ArrayBlockingQueue<Runnable> fThreadPoolQueue = new ArrayBlockingQueue<Runnable>(100000);
     private ThreadPoolExecutor fMyThreadPool;
 
     /**

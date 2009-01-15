@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -28,9 +29,9 @@ public class ChatMessage extends Message
 		this.message = message;
 	}
 	
-	public ChatMessage(byte[] message) throws Exception
+	public ChatMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
 		if (message[1] != TYPE_CHAT_MESSAGE)
 			throw new InvalidParameterException(String.format("The byte array passed to the ChatMessage class is NOT a chat message. Message code is 0x%02x.", message[1]));

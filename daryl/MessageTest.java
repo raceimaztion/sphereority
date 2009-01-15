@@ -16,7 +16,7 @@ public class MessageTest
         
         try
         {
-            LoginRequestMessage msg2 = new LoginRequestMessage(b_msg);
+            LoginRequestMessage msg2 = new LoginRequestMessage(b_msg, null);
             System.out.printf("Transmitted message:\nUsername: '%s', Password: '%s'.\n",
                     msg2.getUserName(), msg2.getPassword());
         }

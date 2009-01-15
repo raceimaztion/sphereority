@@ -1,5 +1,6 @@
 package common.messages;
 
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -13,9 +14,9 @@ public class ServerInfoRequestMessage extends Message
         super(TYPE_SERVER_INFO_REQUEST);
     }
     
-    public ServerInfoRequestMessage(byte[] message) throws Exception
+    public ServerInfoRequestMessage(byte[] message, InetSocketAddress source) throws Exception
     {
-        super(message);
+        super(message, source);
         
         if (message[1] != TYPE_SERVER_INFO_REQUEST)
             throw new InvalidParameterException(String.format("The byte array passed to the ServerInfoRequestMessage class is NOT a server info request message. Message code is 0x%02x.", message[1]));

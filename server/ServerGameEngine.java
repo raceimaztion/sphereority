@@ -42,7 +42,7 @@ class ServerGameEngine implements Constants {
         else {
             playerId = avaliableUserIDs.poll();
             playerInfo.add(new PlayerInfo(playerId,
-                                          message.getAddress(),
+                                          message.getSource(),
                                           message.getPlayerName()));
             logger.log(Level.INFO, message.getPlayerName() + " has joined the game with ID " + playerId);
             logger.log(Level.INFO,"Avaliable Player IDs: " + avaliableUserIDs.size());
@@ -67,7 +67,7 @@ class ServerGameEngine implements Constants {
         }
     }
     
-    public String getPlayerName(byte playerId) {
+    public String getPlayerName(char playerId) {
         for(PlayerInfo player : playerInfo) {
             if(player.getPlayerId() == playerId)
                 return player.getName();

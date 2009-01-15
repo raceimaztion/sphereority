@@ -1,5 +1,6 @@
 package common.messages;
 
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -27,9 +28,9 @@ public class PlayerLeaveMessage extends Message
 	 * @param message
 	 * @throws Exception If the message given is not a player leave message, an exception is thrown
 	 */
-	public PlayerLeaveMessage(byte[] message) throws Exception
+	public PlayerLeaveMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
 		if (message[1] != TYPE_PLAYER_LEAVE)
 			throw new InvalidParameterException(String.format("The byte array passed to the PlayerLeaveMessage class is NOT a player leave message. Message code is 0x%02x.", message[1]));

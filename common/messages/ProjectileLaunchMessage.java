@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 import common.Position;
@@ -47,9 +48,9 @@ public class ProjectileLaunchMessage extends Message
 	 * @param message The message to decode
 	 * @throws Exception If the byte array provided is not a projectile launch message, an exception will be thrown
 	 */
-	public ProjectileLaunchMessage(byte[] message) throws Exception
+	public ProjectileLaunchMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
         if (message[1] != TYPE_PROJECTILE_LAUNCH)
             throw new InvalidParameterException(String.format("The byte array passed to the ProjectileLaunchMessage class is NOT a projectile launch message. Message code is 0x%02x.", message[1]));

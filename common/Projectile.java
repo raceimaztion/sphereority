@@ -10,7 +10,8 @@ import java.util.logging.Logger;
  */
 public class Projectile extends Actor {
 	public static Logger logger = Logger.getLogger(CLIENT_LOGGER_NAME);
-
+	
+	protected float startTime;
 	protected Position startPos;
 	protected Position direction;
 	protected int damage;
@@ -27,6 +28,8 @@ public class Projectile extends Actor {
 		position.move(direction, (curTime - startTime) * BULLET_SPEED);
 		this.owner = owner;
         isDelivered = false;
+        
+        this.startTime = startTime;
         
         height = DEFAULT_PROJECTILE_HEIGHT;
         width = DEFAULT_PROJECTILE_WIDTH;
@@ -103,5 +106,14 @@ public class Projectile extends Actor {
 	public int getDamage(){
 		return damage;
 	}
+
+	public Position getStartPos()
+	{
+		return startPos;
+	}
 	
+	public float getStartTime()
+	{
+		return startTime;
+	}
 }

@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -37,9 +38,9 @@ public class PlayerJoinMessage extends Message
 	 * @param message The message to decode
 	 * @throws Exception If the byte array is not actually a player death message, then an exception is thrown
 	 */
-	public PlayerJoinMessage(byte[] message) throws Exception
+	public PlayerJoinMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
 		if (message[1] != TYPE_PLAYER_JOIN)
 			throw new InvalidParameterException(String.format("The byte array passed to the PlayerJoinMessage class is NOT a player join message. Message code is 0x%02x.", message[1]));

@@ -15,7 +15,7 @@ import java.nio.channels.*;
 /**
  * Client connection to the server and other clients.
  */
-public class ClientRawMulticastConnection implements ClientConnection, ActionListener, Constants, Runnable
+public class ClientRawMulticastConnection implements ClientConnection, ActionListener, Constants, Runnable, MessageConstants
 {
     private GameEngine engine;
     private Thread thread = null;
@@ -180,26 +180,34 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
             //buffer.rewind();
 
             // Get the message from the buffer
-            Message message = MessageAnalyser.getMessageFromArray(buffer.array());
+            Message message = MessageAnalyser.getMessageFromArray(buffer.array(), null);
 
             if (message == null)
                 return;
-
-            if (message.getPlayerId() == engine.localPlayer.getPlayerID())
+            
+            if (message.isMyMessage())
                 return;
 
             switch (message.getMessageType())
             {
-                case PlayerMotion:
-                    engine.processPlayerMotion((PlayerMotionMessage)message);
-                    System.out.printf("PlayerMotion: %d moved to\t(%.2f,%.2f)\n", message.getPlayerId(), ((PlayerMotionMessage) message).getPosition().getX(), ((PlayerMotionMessage) message).getPosition().getY());
-                    break;
-                case PlayerJoin:
+                case TYPE_PLAYER_MOTION:
+                {
+                	PlayerMotionMessage pmm = (PlayerMotionMessage)message;
+                    engine.processPlayerMotion(pmm);
+                    System.out.printf("PlayerMotion: %d moved to\t(%.2f,%.2f)\n",
+                    		pmm.getPlayerId(),
+                    		pmm.getPosition().getX(),
+                    		pmm.getPosition().getY());
+                }
+                break;
+                    
+                case TYPE_PLAYER_JOIN:
                     PlayerJoinMessage msg = (PlayerJoinMessage) message;
                     System.out.println("PlayerJoin: " + msg.getPlayerName() + " wants to join");
                     engine.processPlayerJoin(msg);
-                    registerPlayer(msg.getPlayerId(), msg.getAddress());
+                    registerPlayer(msg.getPlayerId(), msg.getSource());
                     break;
+                    
                 default:
                     System.out.println("Got Undefined Message");
                     break;
@@ -211,22 +219,28 @@ public class ClientRawMulticastConnection implements ClientConnection, ActionLis
     {
         try
         {
-            Message message = MessageAnalyser.getMessageFromArray(data);
-            if (message.getPlayerId() == engine.localPlayer.getPlayerID())
+            Message message = MessageAnalyser.getMessageFromArray(data, null);
+            if (message.isMyMessage())
                 return;
 
             switch (message.getMessageType())
             {
-                case PlayerMotion:
-                    engine.processPlayerMotion((PlayerMotionMessage) message);
-                    System.out.printf("PlayerMotion: %d moved to\t(%.2f,%.2f)\n", message.getPlayerId(), ((PlayerMotionMessage) message).getPosition().getX(), ((PlayerMotionMessage) message).getPosition().getY());
-                    break;
+                case TYPE_PLAYER_MOTION:
+                {
+                	PlayerMotionMessage pmm = (PlayerMotionMessage)message;
+                    engine.processPlayerMotion(pmm);
+                    System.out.printf("PlayerMotion: %d moved to\t(%.2f,%.2f)\n",
+                    		pmm.getPlayerId(),
+                    		pmm.getPosition().getX(),
+                    		pmm.getPosition().getY());
+                }
+                break;
                 
-                case PlayerJoin:
+                case TYPE_PLAYER_JOIN:
                     PlayerJoinMessage msg = (PlayerJoinMessage) message;
                     System.out.println("PlayerJoin: " + msg.getPlayerName() + " wants to join");
                     engine.processPlayerJoin(msg);
-                    registerPlayer(msg.getPlayerId(), msg.getAddress());
+                    registerPlayer(msg.getPlayerId(), msg.getSource());
                     break;
                 
                 default:

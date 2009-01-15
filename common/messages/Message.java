@@ -1,5 +1,7 @@
 package common.messages;
 
+import java.net.InetSocketAddress;
+
 public abstract class Message implements MessageConstants
 {
 	/**
@@ -9,6 +11,11 @@ public abstract class Message implements MessageConstants
 	
 	protected int messageType;
     protected byte[] messageBytes;
+    
+    /**
+     * The ip address and port that originated this packet
+     */
+    protected InetSocketAddress source;
 	
     /**
      * Create a new message of a particular type.
@@ -17,20 +24,23 @@ public abstract class Message implements MessageConstants
 	protected Message(int messageType)
 	{
 		this.messageType = messageType;
+		
         messageBytes = null;
+        source = null;
 	}
     
     /**
      * Create a message from a preexisting byte array
      * @param message
      */
-    protected Message(byte[] message)
+    protected Message(byte[] message, InetSocketAddress source)
     {
     	if (message == null)
     		throw new NullPointerException("All Message classes MUST be passed a non-null byte array message for decoding!");
     	
         messageType = message[1];
         messageBytes = message;
+        this.source = source;
     }
 	
     /**
@@ -71,5 +81,29 @@ public abstract class Message implements MessageConstants
             messageBytes[i+2] = contents[i];
         
         return messageBytes;
+    }
+    
+    /**
+     * For messages that have come in from the network
+     * @return The InetSocketAddress that originated this message
+     */
+    public InetSocketAddress getSource()
+    {
+    	return source;
+    }
+    
+    /**
+     * Find out if we sent this message
+     * @return True if it's a local message, or false if it came through the network from another machine
+     */
+    public boolean isMyMessage()
+    {
+    	// If we don't have a network address on this message, it's definitely ours
+    	if (source == null)
+    		return true;
+    	
+    	// Otherwise, if the address is ours, it came from us
+    	// TODO: Figure out how to ask a InetAddress if it's the local computer's address
+    	return false;
     }
 }

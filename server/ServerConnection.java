@@ -1,14 +1,7 @@
 package server;
 
 import common.Constants;
-//import common.Player;
-import common.messages.Message;
-import common.messages.MessageAnalyser;
-import common.messages.PlayerJoinMessage;
-import common.messages.PlayerLeaveMessage;
-//import common.messages.PlayerMotionMessage;
-//import common.messages.ProjectileMessage;
-//import common.messages.LoginMessage;
+import common.messages.*;
 
 import Extasys.Network.UDP.Server.Listener.MulticastListener;
 import Extasys.Network.UDP.Server.Listener.UDPListener;
@@ -26,7 +19,8 @@ import java.util.logging.Logger;
 /**
  * Establishes the connection used to inform clients of what to do.
  */
-public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Constants {
+public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Constants, MessageConstants
+{
 
     protected ServerGameEngine engine;
     protected InetSocketAddress gameAddress;
@@ -45,28 +39,29 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
         this.gameStartTime = gameStartTime;
     }
 
-    @Override
     public void OnDataReceive(UDPListener listener, DatagramPacket packet)
     {
         try
         {
-            Message message = MessageAnalyser.getMessageFromArray(packet.getData());
+            Message message = MessageAnalyser.getMessageFromArray(packet.getData(), new InetSocketAddress(packet.getAddress(), packet.getPort()));
             
             // Ignore the message if it is sent by the server
-            if(message.isAck())
-                return;
+            if (message.isMyMessage())
+            	return;
         
-            switch(message.getMessageType()) {
-                case PlayerJoin:
+            switch(message.getMessageType())
+            {
+                case TYPE_PLAYER_JOIN:
                     PlayerJoinMessage pj = (PlayerJoinMessage) message;
                     pj.setAck(true);
                     pj.setStartTime(gameStartTime);
                     pj.setAddress(gameAddress);
                     
                     // Processing a new player?
-                    if(pj.getPlayerId() == -1) {
+                    if(pj.getPlayerId() == -1)
+                    {
                         pj.setPlayerId(engine.processPlayerJoin(pj));
-                        logger.log(Level.INFO,"Added Player " + pj.getPlayerName() + " with ID " + pj.getPlayerId());
+                        logger.info("Added Player " + pj.getPlayerName() + " with ID " + pj.getPlayerId());
                         
                         // Send a message via the Server
                         SendMessage(listener,
@@ -75,16 +70,18 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
                                     listener.getPort());
                     }
                     // Asking for information about an existing user
-                    else {
+                    else
+                    {
                         String playerName = engine.getPlayerName(pj.getPlayerId());
                         // Asking for information about a user who does not exist
-                        if(playerName == null) {
+                        if(playerName == null)
+                        {
                             // Send a message that this player should be removed
                             SendMessage(listener,
                                 new PlayerLeaveMessage(pj.getPlayerId()),
                                 listener.getIPAddress(),
                                 listener.getPort());
-                            logger.log(Level.INFO,"Unknown player. Remove from game");
+                            logger.info("Unknown player. Remove from game");
                         }
                         else {
                             pj.setName(playerName);
@@ -96,17 +93,11 @@ public class ServerConnection extends ExtasysUDPServer implements IUDPServer, Co
                         }
                     }
                     break;
-                case PlayerLeave:
-                    message.setAck(true);
-                    // Attempt to remove the player
-                    engine.processPlayerLeave((PlayerLeaveMessage)message);
-                    // Send an ACK
-                    SendMessage(listener,
-                                message,
-                                listener.getIPAddress(),
-                                listener.getPort());
-                    break;
                     
+                case TYPE_PLAYER_LEAVE:
+                	// Send a message to all players that a player has left
+                    engine.processPlayerLeave((PlayerLeaveMessage)message);
+                    break;
             }
         }
         catch (Exception ex)

@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 import common.Position;
@@ -49,9 +50,9 @@ public class LoginResponseMessage extends Message
 		this.initialPosition = initialPosition;
 	}
 	
-	public LoginResponseMessage(byte[] message)
+	public LoginResponseMessage(byte[] message, InetSocketAddress source)
 	{
-		super(message);
+		super(message, source);
 		
 		if (message[1] != TYPE_LOGIN_RESPONSE)
             throw new InvalidParameterException(String.format("The byte array passed to the LoginResponseMessage class is NOT a login response message. Message code is 0x%02x.", message[1]));

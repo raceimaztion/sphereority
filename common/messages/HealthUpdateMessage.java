@@ -2,6 +2,7 @@ package common.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.InetSocketAddress;
 import java.security.InvalidParameterException;
 
 /**
@@ -33,9 +34,9 @@ public class HealthUpdateMessage extends Message
 	 * @param message
 	 * @throws Exception If the given message is not a health update message, an exception is thrown
 	 */
-	public HealthUpdateMessage(byte[] message) throws Exception
+	public HealthUpdateMessage(byte[] message, InetSocketAddress source) throws Exception
 	{
-		super(message);
+		super(message, source);
 		
         if (message[1] != TYPE_PLAYER_DEATH)
             throw new InvalidParameterException(String.format("The byte array passed to the HealthUpdateMessage class is NOT a health update message. Message code is 0x%02x.", message[1]));
