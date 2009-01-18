@@ -15,7 +15,11 @@ import java.net.InetSocketAddress;
 //import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
- 
+
+/*
+ * TODO: Completely rewrite the server and client systems
+ */
+
 /**
  * Establishes the connection used to inform clients of what to do.
  */

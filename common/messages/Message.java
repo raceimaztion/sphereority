@@ -37,6 +37,11 @@ public abstract class Message implements MessageConstants
     {
     	if (message == null)
     		throw new NullPointerException("All Message classes MUST be passed a non-null byte array message for decoding!");
+        if (source == null)
+        {
+            System.out.println("common.messages.Message.Message(byte[],InetSocketAddress): Given a null source.");
+            Thread.dumpStack();
+        }
     	
         messageType = message[1];
         messageBytes = message;

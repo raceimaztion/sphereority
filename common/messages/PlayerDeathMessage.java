@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
  *    The dead player's id (2 bytes)
  *    The id of the player who killed the above (2 bytes)
  */
-public class PlayerDeathMessage extends Message
+public class PlayerDeathMessage extends Message implements MessagePlayerId
 {
 	private char deadPlayerId, killingPlayerId;
 
@@ -68,4 +68,9 @@ public class PlayerDeathMessage extends Message
 	{
 		return killingPlayerId;
 	}
+    
+    public char getPlayerId()
+    {
+        return deadPlayerId;
+    }
 }

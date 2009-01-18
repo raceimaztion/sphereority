@@ -16,7 +16,7 @@ import common.Position;
  *    Time of launch (1 float)
  *    Projectile type (1 byte)
  */
-public class ProjectileLaunchMessage extends Message
+public class ProjectileLaunchMessage extends Message implements MessagePlayerId
 {
 	private char ownerId;
 	private Position origin;
@@ -109,6 +109,11 @@ public class ProjectileLaunchMessage extends Message
 	{
 		return ownerId;
 	}
+    
+    public char getPlayerId()
+    {
+        return ownerId;
+    }
 
 	public byte getType()
 	{

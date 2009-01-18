@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
  *    Sender's player id (2 bytes) or 0xffff for the server
  *    Sender's current game time (1 float)
  */
-public class PingRequestMessage extends Message
+public class PingRequestMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	private float currentTime;

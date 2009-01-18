@@ -52,7 +52,7 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
     public void start() throws Exception {
         try {
             if(!isConnected)
-                establishServerConnection(); 
+                establishServerConnection("RandomUser", ""); 
             else
                 logger.log(Level.INFO,"Connection Already Established");
             
@@ -100,16 +100,15 @@ public class ClientExtaSysConnection extends ExtasysUDPClient implements IUDPCli
     /**
      * Attempts to establish a connection to the server.
      */
-    protected void establishServerConnection() throws Exception {
+    protected void establishServerConnection(String name, String password) throws Exception {
         logger.log(Level.INFO,"Establishing Server Connection");
         super.Start();
         
         // Request to the server that we log in.
+        sendMessage(new LoginRequestMessage(name, password), SERVER_CONNECTOR);
         // Note: Do not need to specify address here.
         // Is here just to avoid a nullpointer when writing the message
-        sendMessage(
-            new PlayerJoinMessage((char)-1, engine.localPlayer.getPlayerName(), (byte)-1),
-                                  SERVER_CONNECTOR);
+        //sendMessage(new PlayerJoinMessage((char)-1, engine.localPlayer.getPlayerName(), (byte)-1), SERVER_CONNECTOR);
     
         // Make sure that we only wait at most 10 seconds
         long waitTime = System.currentTimeMillis() + WAIT_TIME;

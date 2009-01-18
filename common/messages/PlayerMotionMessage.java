@@ -16,7 +16,7 @@ import common.Position;
  *    Velocity (2 floats)
  *    Aim (2 floats)
  */
-public class PlayerMotionMessage extends Message
+public class PlayerMotionMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	private float time;

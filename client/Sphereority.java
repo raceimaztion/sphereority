@@ -84,6 +84,7 @@ public class Sphereority extends Thread implements Constants
         Map map;
         GameEngine game;
         ClientConnection connection = null;
+        String password = "";
         
         do
         {
@@ -106,7 +107,7 @@ public class Sphereority extends Thread implements Constants
 
                 // ExtaSys multicasting connection
                 connection = new ClientExtaSysConnection(InetAddress.getByName(SERVER_ADDRESS),SERVER_PORT, game);
-                ((ClientExtaSysConnection)connection).establishServerConnection();
+                ((ClientExtaSysConnection)connection).establishServerConnection(userName, password);
                 
                 // Set up the game gameWindow
                 if (window)

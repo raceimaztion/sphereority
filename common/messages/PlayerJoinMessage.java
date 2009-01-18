@@ -12,7 +12,7 @@ import java.security.InvalidParameterException;
  *    Player's name (1 string)
  *    Player's team (1 byte)
  */
-public class PlayerJoinMessage extends Message
+public class PlayerJoinMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	private String playerName;

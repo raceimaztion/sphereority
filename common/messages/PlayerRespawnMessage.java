@@ -13,7 +13,7 @@ import common.Position;
  *    The player's id (2 bytes)
  *    New position (2 floats)
  */
-public class PlayerRespawnMessage extends Message
+public class PlayerRespawnMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	private Position newPosition;

@@ -98,10 +98,10 @@ public class GameEngine implements Constants, ActionListener, ActionCallback
 
     private void postSetup(boolean fixed)
     {
-        // if (fixed)
-        // gameMap.placePlayer(localPlayer, null);
-        // else
-        gameMap.placePlayer(localPlayer);
+        if (fixed)
+            gameMap.placePlayer(localPlayer, null);
+        else
+            gameMap.placePlayer(localPlayer);
 
 
         MouseTracker mouseTracker = localPlayer instanceof ComputerPlayer ?

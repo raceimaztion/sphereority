@@ -8,7 +8,7 @@ import java.security.InvalidParameterException;
  * Contents:
  *    Player's id (2 bytes)
  */
-public class PlayerLeaveMessage extends Message
+public class PlayerLeaveMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	

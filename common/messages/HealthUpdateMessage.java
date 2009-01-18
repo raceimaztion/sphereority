@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
  *    Player id (2 bytes)
  *    Health value (2 bytes)
  */
-public class HealthUpdateMessage extends Message
+public class HealthUpdateMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	private char health;

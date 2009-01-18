@@ -23,7 +23,7 @@ import common.Position;
  *    New player's initial position (2 floats or 2 ints)
  *    Number of seconds the current game has been running for (1 float)
  */
-public class LoginResponseMessage extends Message
+public class LoginResponseMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	private byte playerTeam;

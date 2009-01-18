@@ -11,7 +11,7 @@ import java.security.InvalidParameterException;
  *    Sender's player id (2 bytes)
  *    Message (1 string)
  */
-public class ChatMessage extends Message
+public class ChatMessage extends Message implements MessagePlayerId
 {
 	private char playerId;
 	private String message;
